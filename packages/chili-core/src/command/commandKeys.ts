@@ -39,6 +39,16 @@ const COMMAND_KEYS = [
     "modify.rotate",
     "modify.split",
     "modify.trim",
+    "constraint.horizontal", //add by chenhong 20240830:二维约束 水平
+    "constraint.vertical", //add by chenhong 20240830:二维约束 垂直
+    "constraint.equal", //add by chenhong 20240830:二维约束 相等
+    "constraint.collinear", //add by chenhong 20240830:二维约束 共线
+    "constraint.tangent", //add by chenhong 20240830:二维约束 切线
+    "constraint.parallel", //add by chenhong 20240830:三维约束 平行
+    "constraint.perpendicular", //add by chenhong 20240830:三维约束 垂直
+    "constraint.coaxial", //add by chenhong 20240830:三维约束 同轴
+    "constraint.concentric", //add by chenhong 20240830:三维约束 同心
+    "constraint.normal", //add by chenhong 20240830:三维约束 法线
     "special.last",
     "workingPlane.alignToPlane",
     "workingPlane.set",

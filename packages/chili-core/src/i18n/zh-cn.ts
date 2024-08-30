@@ -73,6 +73,16 @@ export default {
         "command.toWire": "转多段线",
         "command.trim": "修剪",
         "command.undo": "撤销",
+        "command.horizontal": "水平", //add by chenhong 20240830:二维约束 水平
+        "command.vertical": "垂直", //add by chenhong 20240830:二维约束 垂直
+        "command.equal": "相等", //add by chenhong 20240830:二维约束 相等
+        "command.collinear": "共线", //add by chenhong 20240830:二维约束 共线
+        "command.tangent": "切线", //add by chenhong 20240830:二维约束 切线
+        "command.parallel": "平行", //add by chenhong 20240830:三维约束 平行
+        "command.perpendicular": "垂直", //add by chenhong 20240830:三维约束 垂直
+        "command.coaxial": "同轴", //add by chenhong 20240830:三维约束 同轴
+        "command.concentric": "同心", //add by chenhong 20240830:三维约束 同心
+        "command.normal": "法线", //add by chenhong 20240830:三维约束 法线
         "common.angle": "角度",
         "common.back": "返回",
         "common.cancel": "取消",
@@ -167,5 +177,7 @@ export default {
         "workingPlane.alignToPlane": "对齐到平面",
         "workingPlane.set": "设置工作平面",
         "test.performace": "性能测试",
+        "ribbon.group.constraint2D": "二维约束", //add by chenhong 20240830:二维约束
+        "ribbon.group.constraint3D": "三维约束", //add by chenhong 20240830:三维约束
     },
 } satisfies Locale;

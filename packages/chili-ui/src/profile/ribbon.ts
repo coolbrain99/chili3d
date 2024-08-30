@@ -65,6 +65,28 @@ export const DefaultRibbon: RibbonTabProfile[] = [
                 groupName: "ribbon.group.importExport",
                 items: ["file.import", "file.export.iges", "file.export.stp"],
             },
+            //add by chenhong 20240830:增加2D约束
+            {
+                groupName: "ribbon.group.constraint2D",
+                items: [
+                    "constraint.horizontal",
+                    "constraint.vertical",
+                    "constraint.equal",
+                    "constraint.collinear",
+                    "constraint.tangent",
+                ],
+            },
+            //add by chenhong 20240830:增加3D约束
+            {
+                groupName: "ribbon.group.constraint3D",
+                items: [
+                    "constraint.parallel",
+                    "constraint.perpendicular",
+                    "constraint.coaxial",
+                    "constraint.concentric",
+                    "constraint.normal",
+                ],
+            },
         ],
     },
     {

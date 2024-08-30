@@ -2,6 +2,7 @@
 
 export * from "./application";
 export * from "./boolean";
+export * from "./constraint";
 export * from "./create";
 export * from "./createCommand";
 export * from "./delete";
@@ -12,4 +13,3 @@ export * from "./multistepCommand";
 export * from "./redo";
 export * from "./undo";
 export * from "./workingPlane";
-

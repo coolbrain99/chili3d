@@ -83,6 +83,16 @@ const I18N_KEYS = [
     "common.opacity",
     "common.thickness",
     "common.type",
+    "command.horizontal", //add by chenhong 20240830:二维约束 水平
+    "command.vertical", //add by chenhong 20240830:二维约束 垂直
+    "command.equal", //add by chenhong 20240830:二维约束 相等
+    "command.collinear", //add by chenhong 20240830:二维约束 共线
+    "command.tangent", //add by chenhong 20240830:二维约束 切线
+    "command.parallel", //add by chenhong 20240830:三维约束 平行
+    "command.perpendicular", //add by chenhong 20240830:三维约束 垂直
+    "command.coaxial", //add by chenhong 20240830:三维约束 同轴
+    "command.concentric", //add by chenhong 20240830:三维约束 同心
+    "command.normal", //add by chenhong 20240830:三维约束 法线
     "entity.editable",
     "entity.parameter",
     "error.default",
@@ -134,6 +144,8 @@ const I18N_KEYS = [
     "ribbon.group.selection",
     "ribbon.group.tools",
     "ribbon.group.workingPlane",
+    "ribbon.group.constraint2D", //add by chenhong 20240830:二维约束
+    "ribbon.group.constraint3D", //add by chenhong 20240830:三维约束
     "ribbon.tab.draw",
     "ribbon.tab.file",
     "ribbon.tab.startup",

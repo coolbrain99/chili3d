@@ -73,6 +73,16 @@ export default {
         "command.toWire": "To Wire",
         "command.trim": "Trim",
         "command.undo": "Undo",
+        "command.horizontal": "Horizontal", //add by chenhong 20240830:二维约束 水平
+        "command.vertical": "Vertical", //add by chenhong 20240830:二维约束 垂直
+        "command.equal": "Equal", //add by chenhong 20240830:二维约束 相等
+        "command.collinear": "Collinear", //add by chenhong 20240830:二维约束 共线
+        "command.tangent": "Tangent", //add by chenhong 20240830:二维约束 切线
+        "command.parallel": "Parallel", //add by chenhong 20240830:三维约束 平行
+        "command.perpendicular": "Perpendicular", //add by chenhong 20240830:三维约束 垂直
+        "command.coaxial": "Coaxial", //add by chenhong 20240830:三维约束 同轴
+        "command.concentric": "Concentric", //add by chenhong 20240830:三维约束 同心
+        "command.normal": "Normal", //add by chenhong 20240830:三维约束 法线
         "common.angle": "Angle",
         "common.back": "Back",
         "common.cancel": "Cancel",
@@ -168,5 +178,7 @@ export default {
         "workingPlane.alignToPlane": "Align to plane",
         "workingPlane.set": "Set workplane",
         "test.performace": "Performace test",
+        "ribbon.group.constraint2D": "2D Constraint", //add by chenhong 20240830:二维约束
+        "ribbon.group.constraint3D": "3D Constraint", //add by chenhong 20240830:三维约束
     },
 } satisfies Locale;
