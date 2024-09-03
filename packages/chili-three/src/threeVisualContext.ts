@@ -3,9 +3,12 @@
 import {
     CollectionAction,
     CollectionChangedArgs,
+    ConstraintAction, //add by chenhong 20240902:
+    ConstraintRecord,
+    IConstraint,
     IDisposable,
     IModel,
-    INode,
+    INode, //add by chenhong 20240902:
     IShapeFilter,
     IVisual,
     IVisualContext,
@@ -14,7 +17,7 @@ import {
     Material,
     MathUtils,
     NodeAction,
-    NodeRecord,
+    NodeRecord, //add by chenhong 20240902:
     ShapeMeshData,
     ShapeType,
     XYZ,
@@ -134,6 +137,21 @@ export class ThreeVisualContext implements IVisualContext {
         });
         this.addModel(adds.filter((x) => !INode.isLinkedListNode(x)) as IModel[]);
         this.removeModel(rms.filter((x) => !INode.isLinkedListNode(x)) as IModel[]);
+    };
+
+    //add by chenhong 20240902:
+    handleConstraintChanged = (records: ConstraintRecord[]) => {
+        let adds: IConstraint[] = [],
+            rms: IConstraint[] = [];
+        records.forEach((x) => {
+            if (x.action === ConstraintAction.add) {
+                IConstraint.nodeOrChildrenAppendToNodes(adds, x.node);
+            } else if (x.action === ConstraintAction.remove) {
+                IConstraint.nodeOrChildrenAppendToNodes(rms, x.node);
+            }
+        });
+        this.addModel(adds.filter((x) => !IConstraint.isConstraintList(x)) as IModel[]);
+        this.removeModel(rms.filter((x) => !IConstraint.isConstraintList(x)) as IModel[]);
     };
 
     addVisualObject(object: IVisualObject): void {

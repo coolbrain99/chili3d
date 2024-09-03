@@ -4,13 +4,20 @@ import {
     CollectionAction,
     CollectionChangedArgs,
     Constants,
+    ConstraintList, //add by chenhong 20240902
+    ConstraintListHistoryRecord, //add by chenhong 20240902
+    ConstraintRecord, //add by chenhong 20240902
+    ConstraintSerializer, //add by chenhong 20240902
     History,
     I18n,
     IApplication,
+    IConstraint, //add by chenhong 20240902
+    IConstraintChangedObserver, //add by chenhong 20240902
+    IConstraintList, //add by chenhong 20240902
     IDocument,
     INode,
-    INodeChangedObserver,
-    INodeLinkedList,
+    INodeChangedObserver, //add by chenhong 20240902
+    INodeLinkedList, //add by chenhong 20240902
     ISelection,
     IVisual,
     Id,
@@ -37,6 +44,7 @@ export class Document extends Observable implements IDocument {
     readonly materials: ObservableCollection<Material> = new ObservableCollection();
 
     private _nodeChangedObservers = new Set<INodeChangedObserver>();
+    private _constraintChangedObservers = new Set<IConstraintChangedObserver>(); //add by chenhong 20240902
 
     private _name: string;
     get name(): string {
@@ -72,6 +80,32 @@ export class Document extends Observable implements IDocument {
         this.setProperty("currentNode", value);
     }
 
+    //add by chenhong 20240902:
+    private _rootConstraint: IConstraintList | undefined;
+    @Serializer.serialze()
+    get rootConstraint(): IConstraintList {
+        if (this._rootConstraint === undefined) {
+            this.setRootConstraint(new ConstraintList(this, this._name));
+        }
+        return this._rootConstraint!;
+    }
+
+    private setRootConstraint(value?: IConstraintList) {
+        if (this._rootConstraint === value) return;
+        this._rootConstraint?.removePropertyChanged(this.handleRootConstraintNameChanged);
+        this._rootConstraint = value ?? new ConstraintList(this, this._name);
+        this._rootConstraint.onPropertyChanged(this.handleRootConstraintNameChanged);
+    }
+
+    private _currentConstraint?: IConstraintList;
+    get currentConstraint(): IConstraintList | undefined {
+        return this._currentConstraint;
+    }
+    set currentConstraint(value: IConstraintList | undefined) {
+        this.setProperty("currentConstraint", value);
+    }
+    //add by chenhong 20240902:
+
     constructor(
         readonly application: IApplication,
         name: string,
@@ -94,6 +128,13 @@ export class Document extends Observable implements IDocument {
         }
     };
 
+    //add by chenhong 20240902:
+    private handleRootConstraintNameChanged = (prop: string) => {
+        if (prop === "name") {
+            this.name = this.rootNode.name;
+        }
+    };
+
     serialize(): Serialized {
         let serialized = {
             classKey: "Document",
@@ -102,6 +143,7 @@ export class Document extends Observable implements IDocument {
                 id: this.id,
                 name: this.name,
                 nodes: NodeSerializer.serialize(this.rootNode),
+                constraints: ConstraintSerializer.serialize(this.rootConstraint), //add by chenhong 20240902:
                 materials: this.materials.map((x) => Serializer.serializeObject(x)),
             },
         };
@@ -116,10 +158,15 @@ export class Document extends Observable implements IDocument {
         this.materials.forEach((x) => x.dispose());
         this.materials.clear();
         this._nodeChangedObservers.clear();
+        this._constraintChangedObservers.clear(); //add by chenhong 20240902:
         this._rootNode?.removePropertyChanged(this.handleRootNodeNameChanged);
         this._rootNode?.dispose();
         this._rootNode = undefined;
+        this._rootConstraint?.removePropertyChanged(this.handleRootConstraintNameChanged); //add by chenhong 20240902:
+        this._rootConstraint?.dispose(); //add by chenhong 20240902:
+        this._rootConstraint = undefined; //add by chenhong 20240902:
         this._currentNode = undefined;
+        this._currentConstraint = undefined;
     }
 
     async save() {
@@ -217,5 +264,30 @@ export class Document extends Observable implements IDocument {
 
     addNode(...nodes: INode[]): void {
         (this.currentNode ?? this.rootNode).add(...nodes);
+    }
+
+    //add by chenhong 20240902:
+    addConstraint(...nodes: IConstraint[]): void {
+        //add by chenhong 20240902:add constraint
+        (this.currentConstraint ?? this.rootConstraint).add(...nodes);
+    }
+
+    //add by chenhong 20240902:
+    addConstraintObserver(observer: IConstraintChangedObserver): void {
+        //add by chenhong 20240902:add constraint
+        this._constraintChangedObservers.add(observer);
+    }
+
+    //add by chenhong 20240902:
+    removeConstraintObserver(observer: IConstraintChangedObserver): void {
+        //add by chenhong 20240902:add constraint
+        this._constraintChangedObservers.delete(observer);
+    }
+
+    //add by chenhong 20240902:
+    notifyConstraintChanged(records: ConstraintRecord[]): void {
+        //add by chenhong 20240902:add constraint
+        Transaction.add(this, this.history, new ConstraintListHistoryRecord(records));
+        this._constraintChangedObservers.forEach((x) => x.handleConstraintChanged(records));
     }
 }

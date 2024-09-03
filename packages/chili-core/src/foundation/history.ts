@@ -1,6 +1,6 @@
 // Copyright 2022-2023 the Chili authors. All rights reserved. AGPL-3.0 license.
 
-import { INode, INodeLinkedList } from "../model";
+import { IConstraint, IConstraintList, INode, INodeLinkedList } from "../model";
 import { IDisposable } from "./disposable";
 
 export interface IHistoryRecord extends IDisposable {
@@ -157,6 +157,76 @@ export class NodeLinkedListHistoryRecord implements IHistoryRecord {
     }
 }
 
+// add constraint by chenhong 20240902:
+export enum ConstraintAction {
+    add,
+    remove,
+    move,
+    insertAfter,
+    insertBefore,
+}
+
+export interface ConstraintRecord {
+    node: IConstraint;
+    action: ConstraintAction;
+    oldParent?: IConstraintList;
+    oldPrevious?: IConstraint;
+    newParent?: IConstraintList;
+    newPrevious?: IConstraint;
+}
+
+export interface IConstraintChangedObserver {
+    handleConstraintChanged(records: ConstraintRecord[]): void;
+}
+
+export class ConstraintListHistoryRecord implements IHistoryRecord {
+    readonly name: string;
+    constructor(readonly records: ConstraintRecord[]) {
+        this.name = `change constraint`;
+    }
+
+    dispose(): void {
+        this.records.forEach((record) => {
+            if (record.action === ConstraintAction.remove) {
+                record.node.dispose();
+            }
+        });
+    }
+
+    undo() {
+        for (let index = this.records.length - 1; index >= 0; index--) {
+            let record = this.records[index];
+            if (record.action === ConstraintAction.add) {
+                record.newParent?.remove(record.node);
+            } else if (record.action === ConstraintAction.remove) {
+                record.oldParent?.add(record.node);
+            } else if (record.action === ConstraintAction.move) {
+                record.newParent?.move(record.node, record.oldParent!, record.oldPrevious);
+            } else if (record.action === ConstraintAction.insertAfter) {
+                record.newParent?.remove(record.node);
+            } else if (record.action === ConstraintAction.insertBefore) {
+                record.newParent?.remove(record.node);
+            }
+        }
+    }
+
+    redo() {
+        for (const record of this.records) {
+            if (record.action === ConstraintAction.add) {
+                record.newParent?.add(record.node);
+            } else if (record.action === ConstraintAction.remove) {
+                record.oldParent?.remove(record.node);
+            } else if (record.action === ConstraintAction.move) {
+                record.oldParent?.move(record.node, record.newParent!, record.newPrevious);
+            } else if (record.action === ConstraintAction.insertAfter) {
+                record.newParent?.insertAfter(record.newPrevious, record.node);
+            } else if (record.action === ConstraintAction.insertBefore) {
+                record.newParent?.insertBefore(record.newPrevious?.nextSibling, record.node);
+            }
+        }
+    }
+}
+// add constraint by chenhong 20240902:
 export class ArrayRecord implements IHistoryRecord {
     readonly records: Array<IHistoryRecord> = [];
 

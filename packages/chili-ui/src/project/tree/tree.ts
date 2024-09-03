@@ -1,11 +1,12 @@
 // Copyright 2022-2023 the Chili authors. All rights reserved. AGPL-3.0 license.
 
 import {
+    ConstraintRecord,
     IDocument,
     INode,
     INodeChangedObserver,
     INodeLinkedList,
-    NodeRecord,
+    NodeRecord, //add by chenhong 20240902:
     PubSub,
     ShapeType,
     Transaction,
@@ -65,6 +66,21 @@ export class Tree extends HTMLElement implements INodeChangedObserver {
             }
         }
     }
+
+    //add by chenhong 20240902:
+    handleConstraintChanged = (records: ConstraintRecord[]) => {
+        //this.ensureHasHTML(records);
+        for (const record of records) {
+            let ele = this.nodeMap.get(record.node);
+            ele?.remove();
+            if (ele === undefined || record.newParent === undefined) continue;
+            let parent = this.nodeMap.get(record.newParent);
+            if (parent instanceof TreeGroup) {
+                let pre = record.newPrevious === undefined ? null : this.nodeMap.get(record.newPrevious);
+                parent.insertAfter(ele, pre ?? null);
+            }
+        }
+    };
 
     private handleSelectionChanged = (document: IDocument, selected: INode[], unselected: INode[]) => {
         unselected.forEach((x) => {
